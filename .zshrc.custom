@@ -1,0 +1,203 @@
+# =============================================================================
+# Configuraciones Custom de Zsh
+# =============================================================================
+# Este archivo es cargado por .zshrc
+# Personaliza según tus preferencias
+# =============================================================================
+
+# === PLUGINS DE OH MY ZSH ===
+# Agregar al archivo .zshrc principal: plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# === VARIABLES DE ENTORNO ===
+export EDITOR="code --wait"
+export VISUAL="$EDITOR"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# History
+export HISTSIZE=10000
+export SAVEHIST=10000
+export HISTFILE="$HOME/.zsh_history"
+
+# === ALIASES ===
+
+# -- Navegación --
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+alias -- -="cd -"
+
+# -- Listado de archivos (usando eza si está instalado) --
+if command -v eza &> /dev/null; then
+    alias ls="eza --icons"
+    alias ll="eza -la --icons --git"
+    alias la="eza -a --icons"
+    alias lt="eza --tree --level=2 --icons"
+    alias lta="eza --tree --level=2 -a --icons"
+else
+    alias ll="ls -la"
+    alias la="ls -A"
+fi
+
+# -- Cat mejorado (usando bat si está instalado) --
+if command -v bat &> /dev/null; then
+    alias cat="bat --style=plain"
+    alias catn="bat"
+fi
+
+# -- Git shortcuts --
+alias g="git"
+alias gs="git status"
+alias ga="git add"
+alias gaa="git add --all"
+alias gc="git commit -m"
+alias gp="git push"
+alias gpl="git pull"
+alias gco="git checkout"
+alias gb="git branch"
+alias gl="git log --oneline --graph --decorate -10"
+alias gd="git diff"
+alias gds="git diff --staged"
+alias gcl="git clone"
+
+# -- Docker shortcuts --
+alias d="docker"
+alias dc="docker compose"
+alias dps="docker ps"
+alias dpsa="docker ps -a"
+alias di="docker images"
+alias dex="docker exec -it"
+alias dlogs="docker logs -f"
+
+# -- Node/npm shortcuts --
+alias ni="npm install"
+alias nr="npm run"
+alias nrd="npm run dev"
+alias nrb="npm run build"
+alias nrt="npm run test"
+alias ns="npm start"
+
+# -- Yarn shortcuts --
+alias y="yarn"
+alias yd="yarn dev"
+alias yb="yarn build"
+alias yt="yarn test"
+
+# -- Python shortcuts --
+alias py="python3"
+alias pip="pip3"
+alias venv="python3 -m venv venv"
+alias activate="source venv/bin/activate"
+
+# -- Utilidades --
+alias c="clear"
+alias h="history"
+alias reload="source ~/.zshrc"
+alias path='echo -e ${PATH//:/\\n}'
+alias now='date +"%T"'
+alias today='date +"%Y-%m-%d"'
+alias week='date +%V'
+alias myip="curl -s ifconfig.me"
+alias localip="ipconfig getifaddr en0"
+alias ports="lsof -i -P -n | grep LISTEN"
+alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+
+# -- Limpieza --
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
+
+# -- Directorios rápidos (personaliza según tu estructura) --
+alias projects="cd ~/Projects"
+alias desktop="cd ~/Desktop"
+alias downloads="cd ~/Downloads"
+
+# === FUNCIONES ===
+
+# Crear directorio y entrar
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# Extraer archivos (detecta automáticamente el tipo)
+extract() {
+    if [ -f "$1" ]; then
+        case "$1" in
+            *.tar.bz2)   tar xjf "$1"     ;;
+            *.tar.gz)    tar xzf "$1"     ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.rar)       unrar x "$1"     ;;
+            *.gz)        gunzip "$1"      ;;
+            *.tar)       tar xf "$1"      ;;
+            *.tbz2)      tar xjf "$1"     ;;
+            *.tgz)       tar xzf "$1"     ;;
+            *.zip)       unzip "$1"       ;;
+            *.Z)         uncompress "$1"  ;;
+            *.7z)        7z x "$1"        ;;
+            *)           echo "'$1' no puede ser extraído" ;;
+        esac
+    else
+        echo "'$1' no es un archivo válido"
+    fi
+}
+
+# Buscar en historial
+hg() {
+    history | grep "$1"
+}
+
+# Abrir en VS Code
+c.() {
+    code "${1:-.}"
+}
+
+# Git: add, commit, push en un comando
+acp() {
+    git add -A && git commit -m "$1" && git push
+}
+
+# Puerto ocupado por proceso
+port() {
+    lsof -i :"$1"
+}
+
+# Matar proceso en puerto
+killport() {
+    lsof -ti :"$1" | xargs kill -9
+}
+
+# === NVM ===
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# === FZF ===
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# === ZOXIDE (cd mejorado) ===
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+# === CONFIGURACIONES ADICIONALES ===
+
+# Autocompletado case-insensitive
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Colores en autocompletado
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# Corrección de comandos
+setopt correct
+
+# Compartir historial entre terminales
+setopt share_history
+setopt hist_ignore_dups
+setopt hist_ignore_space
+
+# cd sin escribir cd
+setopt autocd
+
+# =============================================================================
+# FIN DE CONFIGURACIONES CUSTOM
+# =============================================================================

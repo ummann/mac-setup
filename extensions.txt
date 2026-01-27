@@ -1,0 +1,81 @@
+# =============================================================================
+# Extensiones de VS Code
+# =============================================================================
+# Una extensión por línea (ID de extensión). Las líneas con # son ignoradas.
+# Puedes encontrar el ID en el Marketplace de VS Code.
+# =============================================================================
+
+# --- Formateo y Linting ---
+esbenp.prettier-vscode
+dbaeumer.vscode-eslint
+editorconfig.editorconfig
+
+# --- HTML/CSS ---
+bradlc.vscode-tailwindcss
+formulahendry.auto-close-tag
+formulahendry.auto-rename-tag
+ecmel.vscode-html-css
+pranaygp.vscode-css-peek
+
+# --- JavaScript/TypeScript ---
+dsznajder.es7-react-js-snippets
+christian-kohler.path-intellisense
+christian-kohler.npm-intellisense
+
+# --- Git ---
+eamodio.gitlens
+mhutchie.git-graph
+
+# --- Python ---
+ms-python.python
+ms-python.vscode-pylance
+ms-python.black-formatter
+
+# --- Temas e Iconos ---
+vscode-icons-team.vscode-icons
+PKief.material-icon-theme
+zhuangtongfa.material-theme
+dracula-theme.theme-dracula
+enkia.tokyo-night
+GitHub.github-vscode-theme
+
+# --- AI y Copilot ---
+GitHub.copilot
+GitHub.copilot-chat
+
+# --- Docker ---
+ms-azuretools.vscode-docker
+
+# --- Utilidades ---
+streetsidesoftware.code-spell-checker
+wayou.vscode-todo-highlight
+usernamehw.errorlens
+gruntfuggly.todo-tree
+
+# --- Markdown ---
+yzhang.markdown-all-in-one
+bierner.markdown-preview-github-styles
+
+# --- REST Client ---
+rangav.vscode-thunder-client
+
+# --- Remote Development ---
+ms-vscode-remote.remote-ssh
+ms-vscode-remote.remote-containers
+
+# --- Database ---
+mtxr.sqltools
+cweijan.vscode-database-client2
+
+# --- Mobile Development ---
+msjsdiag.vscode-react-native
+expo.vscode-expo-tools
+
+# --- Jupyter / AI ---
+ms-toolsai.jupyter
+
+# --- Extras ---
+mikestead.dotenv
+aaron-bond.better-comments
+naumovs.color-highlight
+wix.vscode-import-cost
