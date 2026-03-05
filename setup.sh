@@ -675,6 +675,10 @@ if [[ "$CONFIGURE_MACOS_DEFAULTS" == true ]]; then
     killall Finder 2>/dev/null || true
     killall Dock 2>/dev/null || true
     
+    # Habilitar Screen Sharing para acceso remoto via Tailscale
+    log_info "Habilitando Screen Sharing..."
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || log_warn "No se pudo habilitar Screen Sharing"
+
     log_info "Configuraciones de macOS aplicadas"
 fi
 

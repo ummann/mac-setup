@@ -104,6 +104,9 @@ cask "raycast"
 cask "slack"
 cask "discord"
 
+# Networking
+cask "tailscale"        # VPN mesh para acceso remoto
+
 # Utilidades
 cask "the-unarchiver"
 cask "appcleaner"
