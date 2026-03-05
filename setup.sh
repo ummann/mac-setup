@@ -218,7 +218,16 @@ if [[ "$INSTALL_CLI_TOOLS" == true ]]; then
         
         # Stripe
         "stripe/stripe-cli/stripe"
-        
+
+        # Cloud
+        "railway"
+
+        # Testing & Performance
+        "k6"
+
+        # Utilidades
+        "watch"
+
         # Tunnels
         "ngrok"
     )
@@ -275,6 +284,22 @@ if [[ "$INSTALL_NODE" == true ]]; then
         npm install -g @angular/cli
         npm install -g typescript
         npm install -g ts-node
+
+        # Instalar Bun
+        if ! command_exists bun; then
+            log_info "Instalando Bun..."
+            brew tap oven-sh/bun
+            brew install bun
+        else
+            log_info "Bun ya está instalado"
+        fi
+
+        # CLIs globales de desarrollo
+        log_info "Instalando CLIs de desarrollo (turbo, wrangler, sentry, claude)..."
+        npm install -g turbo
+        npm install -g wrangler
+        npm install -g @sentry/cli
+        npm install -g @anthropic-ai/claude-code
     fi
 fi
 

@@ -53,10 +53,18 @@ brew "redis"
 brew "awscli"
 brew "kubectl"
 brew "stripe/stripe-cli/stripe"
+brew "railway"
+
+# Testing & Performance
+brew "k6"              # Load testing
 
 # Utilidades
 brew "mas"          # Mac App Store CLI
 brew "trash"        # Mover a papelera en vez de rm
+brew "watch"        # Ejecutar comando periodicamente
+
+# Runtimes adicionales
+brew "oven-sh/bun/bun"  # Bun runtime
 
 # =============================================================================
 # Lenguajes y Runtimes
