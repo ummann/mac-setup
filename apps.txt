@@ -1,69 +1,30 @@
-# =============================================================================
-# Aplicaciones para instalar via Homebrew Cask
-# =============================================================================
-# Una aplicación por línea. Las líneas que comienzan con # son ignoradas.
-# Puedes agregar o quitar aplicaciones según tus necesidades.
-# =============================================================================
-
-# --- Navegadores ---
-google-chrome
-firefox
-
-# --- Editores y IDEs ---
-visual-studio-code
-cursor
-
-# --- Terminal ---
-iterm2
-warp
-
-# --- Productividad ---
-rectangle
-raycast
-# alfred (alternativa a raycast)
-
-# --- Desarrollo ---
-docker
-postman
-tableplus
-# dbeaver-community
-
-# --- Comunicación ---
-slack
-discord
-# zoom
-
-# --- Utilidades ---
-# 1password
-# bitwarden
-the-unarchiver
-appcleaner
-
-# --- Entretenimiento ---
-spotify
-# vlc
-
-# --- Mobile Development ---
 android-studio
-# flutter (if using Flutter)
-# react-native-debugger
-
-# --- Cloud CLIs (installed as casks) ---
-google-cloud-sdk
-
-# --- Diseño (descomentar si necesitas) ---
+appcleaner
+chatbox
+claude
+cursor
+discord
 figma
-# sketch
-
-# --- Cloud Storage (descomentar si necesitas) ---
-# google-drive
-# dropbox
-
-# --- Notas y Documentación (descomentar si necesitas) ---
-notion
-# obsidian
-
-# --- Fonts ---
-font-meslo-lg-nerd-font
+firefox
 font-fira-code-nerd-font
 font-jetbrains-mono-nerd-font
+font-meslo-lg-nerd-font
+gcloud-cli
+hammerspoon
+inkscape
+iterm2
+mactex-no-gui
+ngrok
+notion
+podman-desktop
+postman
+raycast
+rectangle
+slack
+spotify
+tableplus
+tailscale-app
+the-unarchiver
+visual-studio-code
+warp
+zulu@17

@@ -1,141 +1,163 @@
-# =============================================================================
-# Brewfile - Homebrew Bundle
-# =============================================================================
-# Uso: brew bundle install --file=Brewfile
-# Para generar desde tu sistema actual: brew bundle dump
-# =============================================================================
-
-# Taps adicionales
-tap "homebrew/bundle"
-tap "homebrew/services"
+tap "minio/stable"
+tap "oven-sh/bun"
+tap "schpet/tap"
 tap "stripe/stripe-cli"
-
-# =============================================================================
-# CLI Tools
-# =============================================================================
-
-# Esenciales
-brew "git"
-brew "wget"
-brew "curl"
-brew "tree"
-brew "jq"
-brew "htop"
-brew "tldr"
-
-# Herramientas modernas (replacements)
-brew "ripgrep"      # grep mejorado (rg)
-brew "fd"           # find mejorado
-brew "bat"          # cat mejorado
-brew "eza"          # ls mejorado (antes exa)
-brew "fzf"          # fuzzy finder
-brew "zoxide"       # cd mejorado (z)
-brew "delta"        # diff mejorado para git
-brew "procs"        # ps mejorado
-brew "dust"         # du mejorado
-brew "duf"          # df mejorado
-
-# Desarrollo
-brew "gh"           # GitHub CLI
-brew "lazygit"      # Git TUI
-brew "tmux"         # Terminal multiplexer
-brew "httpie"       # HTTP client amigable
-brew "shellcheck"   # Linter para shell scripts
-brew "direnv"       # Variables de entorno por directorio
-brew "gnupg"        # GPG para firmar commits
-brew "yq"           # jq para YAML
-
-# Databases
-brew "postgresql@16"
-brew "redis"
-
-# Cloud & Infrastructure
+tap "wix/brew"
 brew "awscli"
-brew "kubectl"
-brew "stripe/stripe-cli/stripe"
-brew "railway"
-
-# Testing & Performance
-brew "k6"              # Load testing
-
-# Utilidades
-brew "mas"          # Mac App Store CLI
-brew "trash"        # Mover a papelera en vez de rm
-brew "watch"        # Ejecutar comando periodicamente
-
-# Runtimes adicionales
-brew "oven-sh/bun/bun"  # Bun runtime
-
-# =============================================================================
-# Lenguajes y Runtimes
-# =============================================================================
-
-# Python
-brew "python"
+brew "bat"
+brew "cloudflared"
+brew "cocoapods"
+brew "colima"
+brew "curl"
+brew "direnv"
+brew "docker"
+brew "duf"
+brew "dust"
+brew "eza"
+brew "fd"
+brew "ffmpeg"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "git-delta"
+brew "git-filter-repo"
+brew "gnupg"
+brew "go"
+brew "htop"
+brew "httpie"
+brew "imagemagick"
+brew "jq"
+brew "just"
+brew "k6"
+brew "kubernetes-cli"
+brew "lazygit"
+brew "libavif"
+brew "libpq"
+brew "libpst"
+brew "librsvg"
+brew "mas"
+brew "neovim"
+brew "node@20", link: true
+brew "node@22"
+brew "ollama", restart_service: :changed
+brew "pandoc"
+brew "pgvector"
 brew "pipx"
-
-# Go (descomentar si necesitas)
-# brew "go"
-
-# Rust (descomentar si necesitas)
-# brew "rustup-init"
-
-# =============================================================================
-# Aplicaciones (Cask)
-# =============================================================================
-
-# Navegadores
-cask "google-chrome"
-cask "firefox"
-
-# Desarrollo
-cask "visual-studio-code"
-cask "cursor"
-cask "iterm2"
-cask "docker"
-cask "postman"
-cask "tableplus"
-
-# Productividad
-cask "rectangle"
-cask "raycast"
-
-# Comunicación
-cask "slack"
-cask "discord"
-
-# Networking
-cask "tailscale"        # VPN mesh para acceso remoto
-
-# Utilidades
-cask "the-unarchiver"
-cask "appcleaner"
-
-# Entretenimiento
-cask "spotify"
-
-# Mobile Development
+brew "pngquant"
+brew "podman"
+brew "poppler"
+brew "postgresql@16", restart_service: :changed
+brew "postgresql@17"
+brew "postgresql@18"
+brew "potrace"
+brew "procs"
+brew "qrencode"
+brew "railway"
+brew "redis", restart_service: :changed
+brew "ripgrep"
+brew "shellcheck"
+brew "tectonic"
+brew "terminal-notifier"
+brew "tldr"
+brew "tmux"
+brew "tor", restart_service: :changed
+brew "tree"
+brew "typst"
+brew "uv"
+brew "watch"
+brew "wget"
+brew "whisper-cpp"
+brew "yq"
+brew "zoxide"
+brew "minio/stable/mc"
+brew "oven-sh/bun/bun"
+brew "schpet/tap/linear"
+brew "stripe/stripe-cli/stripe"
+brew "wix/brew/applesimutils"
 cask "android-studio"
-# cask "flutter"        # Descomentar si usas Flutter
-# cask "react-native-debugger"
-
-# Cloud
-cask "google-cloud-sdk"
-
-# Design & Productivity
+cask "appcleaner"
+cask "chatbox"
+cask "claude"
+cask "cursor"
+cask "discord"
 cask "figma"
-cask "notion"
-
-# Fuentes para terminal
-cask "font-meslo-lg-nerd-font"
+cask "firefox"
 cask "font-fira-code-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
-
-# =============================================================================
-# Mac App Store (requiere mas y estar logueado)
-# =============================================================================
-
-# Descomenta y agrega el ID de las apps que quieras
-# mas "Xcode", id: 497799835
-# mas "Magnet", id: 441258766
-# mas "Bear", id: 1091189122
+cask "font-meslo-lg-nerd-font"
+cask "gcloud-cli"
+cask "hammerspoon"
+cask "inkscape"
+cask "iterm2"
+cask "mactex-no-gui"
+cask "ngrok"
+cask "notion"
+cask "podman-desktop"
+cask "postman"
+cask "raycast"
+cask "rectangle"
+cask "slack"
+cask "spotify"
+cask "tableplus"
+cask "tailscale-app"
+cask "the-unarchiver"
+cask "visual-studio-code"
+cask "warp"
+cask "zulu@17"
+mas "Telegram", id: 747648890
+mas "WhatsApp", id: 310633997
+mas "Windows App", id: 1295203466
+mas "Xcode", id: 497799835
+vscode "aaron-bond.better-comments"
+vscode "bierner.markdown-preview-github-styles"
+vscode "bradlc.vscode-tailwindcss"
+vscode "christian-kohler.npm-intellisense"
+vscode "christian-kohler.path-intellisense"
+vscode "cweijan.dbclient-jdbc"
+vscode "cweijan.vscode-database-client2"
+vscode "dbaeumer.vscode-eslint"
+vscode "dracula-theme.theme-dracula"
+vscode "dsznajder.es7-react-js-snippets"
+vscode "eamodio.gitlens"
+vscode "ecmel.vscode-html-css"
+vscode "editorconfig.editorconfig"
+vscode "enkia.tokyo-night"
+vscode "esbenp.prettier-vscode"
+vscode "expo.vscode-expo-tools"
+vscode "formulahendry.auto-close-tag"
+vscode "formulahendry.auto-rename-tag"
+vscode "github.copilot-chat"
+vscode "github.github-vscode-theme"
+vscode "gruntfuggly.todo-tree"
+vscode "mhutchie.git-graph"
+vscode "mikestead.dotenv"
+vscode "ms-azuretools.vscode-containers"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-python.black-formatter"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode.remote-explorer"
+vscode "msjsdiag.vscode-react-native"
+vscode "mtxr.sqltools"
+vscode "naumovs.color-highlight"
+vscode "pkief.material-icon-theme"
+vscode "pranaygp.vscode-css-peek"
+vscode "rangav.vscode-thunder-client"
+vscode "redhat.vscode-yaml"
+vscode "streetsidesoftware.code-spell-checker"
+vscode "usernamehw.errorlens"
+vscode "vscode-icons-team.vscode-icons"
+vscode "wayou.vscode-todo-highlight"
+vscode "wix.vscode-import-cost"
+vscode "yzhang.markdown-all-in-one"
+vscode "zhuangtongfa.material-theme"
