@@ -8,15 +8,18 @@ Guía completa para migrar tu entorno de desarrollo entre Macs sin perder nada.
 # === EN MAC VIEJA ===
 cd ~/projects/mac-setup
 git pull
-./scripts/backup-old-mac.sh   # genera ~/mac-migration/
+./scripts/backup-old-mac.sh      # configs + repos + envs (cifrado)
+./scripts/backup-services.sh     # LaunchAgents + DBs + state runtime (cifrado)
 
 # Copiar ~/mac-migration/ a la mac nueva (AirDrop, USB, iCloud, rsync)
 
 # === EN MAC NUEVA ===
 git clone https://github.com/ummann/mac-setup.git
 cd mac-setup
-./setup.sh                    # tools, apps, brew, etc.
-./scripts/restore-new-mac.sh ~/mac-migration/  # restaura configs + repos
+./setup.sh                                       # tools, apps, brew (15-30 min)
+./scripts/setup-shell.sh                         # dotfiles + ~/.claude
+./scripts/restore-new-mac.sh ~/mac-migration/    # configs + repos + envs
+./scripts/restore-services.sh ~/mac-migration/   # daemons + DBs + state
 ```
 
 ---
@@ -43,7 +46,16 @@ El script `backup-old-mac.sh` te avisa de cada uno y los empaqueta en el tarball
 
 ## 🔧 Qué se respalda
 
-### Configs sensibles (cifradas en el tarball)
+### `backup-services.sh` — daemons y state runtime (cifrado)
+- **LaunchAgents** `~/Library/LaunchAgents/*.plist` (filtra UMMANN, nemo, brew services, cloudflare)
+- **Postgres** `pg_dump -Fc` por DB (nemo, adepthr_*, etc.) + `pg_dumpall --globals-only`
+- **Redis** `dump.rdb` (con `BGSAVE` previo para snapshot fresco)
+- **cmux state** `~/Library/Application Support/cmux/` (sin el socket)
+- **uwl state** `~/.uwl/` (sessions, summaries, exec)
+- **whatsapp-mcp** SQLite DBs (mensajes, contactos)
+- **Runtime snapshot** (procesos activos, puertos, custom binaries) para diagnóstico
+
+### `backup-old-mac.sh` — configs sensibles (cifradas en el tarball)
 - `~/.ssh/` — keys, config, known_hosts, authorized_keys
 - `~/.gitconfig`, `~/.gitignore_global`
 - `~/.gnupg/` (si existe)
@@ -129,9 +141,12 @@ Después de verificar que TODO funciona en la nueva:
 
 - `setup.sh` — instala todo desde cero (corre primero en mac nueva)
 - `macos-defaults.sh` — defaults de macOS (Finder, Dock, etc.)
-- `scripts/backup-old-mac.sh` — empaqueta todo lo de esta mac
-- `scripts/restore-new-mac.sh` — restaura el tarball + clona repos
-- `Brewfile`, `apps.txt`, `extensions.txt` — listas estáticas como fallback
+- `scripts/setup-shell.sh` — clona dotfiles + ummann-claude-config
+- `scripts/backup-old-mac.sh` — configs + repos + envs
+- `scripts/restore-new-mac.sh` — restaura configs + clona repos
+- `scripts/backup-services.sh` — LaunchAgents + DBs + cmux/uwl state
+- `scripts/restore-services.sh` — restaura daemons + DBs + state
+- `Brewfile`, `apps.txt`, `extensions.txt`, `cursor-extensions.txt`, `mas-apps.txt`
 
 ---
 
