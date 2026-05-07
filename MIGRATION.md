@@ -8,6 +8,7 @@ Guía completa para migrar tu entorno de desarrollo entre Macs sin perder nada.
 # === EN MAC VIEJA ===
 cd ~/projects/mac-setup
 git pull
+./scripts/decommission.sh        # ⚠ PRIMERO: para todos los daemons (zero duplication)
 ./scripts/backup-old-mac.sh      # configs + repos + envs (cifrado)
 ./scripts/backup-services.sh     # LaunchAgents + DBs + state runtime (cifrado)
 
@@ -19,8 +20,11 @@ cd mac-setup
 ./setup.sh                                       # tools, apps, brew (15-30 min)
 ./scripts/setup-shell.sh                         # dotfiles + ~/.claude
 ./scripts/restore-new-mac.sh ~/mac-migration/    # configs + repos + envs
-./scripts/restore-services.sh ~/mac-migration/   # daemons + DBs + state
+./scripts/restore-services.sh ~/mac-migration/   # daemons + DBs + state — al final dice 'y' a launchctl load
+# Verifica: curl https://nemo-api.ummann.com/health
 ```
+
+> **Importante:** corre `decommission.sh` ANTES de los backups, no después. Si los daemons siguen escribiendo a la DB durante el `pg_dump`, los datos creados después del dump se pierden cuando apagas la mac vieja. Y si ambas macs corren los workers a la vez (cron de morning-brief, notes-digest, etc.), recibes mensajes duplicados.
 
 ---
 
@@ -172,6 +176,7 @@ pg_restore -d nemo --clean --if-exists nemo.dump
 - `scripts/backup-nemo-db.sh` — pg_dump cifrado + iCloud (corre diario via LaunchAgent)
 - `scripts/install-nemo-backup.sh` — instala el LaunchAgent de backup
 - `launchagents/com.ummann.nemo-backup.plist` — schedule del backup
+- `scripts/decommission.sh` — para todos los daemons antes de migrar (con `--restart` para rollback)
 - `Brewfile`, `apps.txt`, `extensions.txt`, `cursor-extensions.txt`, `mas-apps.txt`
 
 ---
