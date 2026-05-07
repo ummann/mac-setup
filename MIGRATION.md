@@ -137,6 +137,29 @@ Después de verificar que TODO funciona en la nueva:
 
 ---
 
+## 🧠 Backup diario de la DB nemo (recomendado)
+
+Toda la "memoria" de nemo (1,200+ embeddings, 5,400+ session events, 791 inner thoughts, knowledge, insights, goals) vive solo en la DB Postgres local. Si la mac se rompe sin backup, se pierde todo.
+
+```bash
+./scripts/install-nemo-backup.sh
+```
+
+Esto:
+1. Te pide una passphrase (la guarda en macOS Keychain — `security find-generic-password -s nemo-backup`).
+2. Instala `~/Library/LaunchAgents/com.ummann.nemo-backup.plist` que corre diario a las 05:15.
+3. El job hace `pg_dump -Fc nemo` → cifra con `openssl aes-256-cbc` → guarda en `~/nemo-backups/` (ret. 14 días) y `~/Library/Mobile Documents/com~apple~CloudDocs/Nemo/db-backups/` (ret. 90 días, sync iCloud).
+4. Logs en `~/Library/Logs/nemo-backup.log`.
+
+Costo: $0. Recursos: ~1-2 segundos de CPU + 30MB-1GB de iCloud (dentro de tu cuota Apple).
+
+Restaurar manualmente:
+```bash
+openssl enc -d -aes-256-cbc -pbkdf2 -in nemo-20260507-051500.dump.enc -out nemo.dump \
+  -pass pass:"$(security find-generic-password -a $USER -s nemo-backup -w)"
+pg_restore -d nemo --clean --if-exists nemo.dump
+```
+
 ## 📚 Referencias
 
 - `setup.sh` — instala todo desde cero (corre primero en mac nueva)
@@ -146,6 +169,9 @@ Después de verificar que TODO funciona en la nueva:
 - `scripts/restore-new-mac.sh` — restaura configs + clona repos
 - `scripts/backup-services.sh` — LaunchAgents + DBs + cmux/uwl state
 - `scripts/restore-services.sh` — restaura daemons + DBs + state
+- `scripts/backup-nemo-db.sh` — pg_dump cifrado + iCloud (corre diario via LaunchAgent)
+- `scripts/install-nemo-backup.sh` — instala el LaunchAgent de backup
+- `launchagents/com.ummann.nemo-backup.plist` — schedule del backup
 - `Brewfile`, `apps.txt`, `extensions.txt`, `cursor-extensions.txt`, `mas-apps.txt`
 
 ---
