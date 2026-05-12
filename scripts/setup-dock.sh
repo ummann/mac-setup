@@ -19,16 +19,19 @@ log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_skip() { echo -e "${YELLOW}[SKIP]${NC} $1"; }
 
+# Lista de apps fijas en el Dock. Cada entrada es un path absoluto a .app.
+# Notas:
+# - System Settings vive en /System/Applications/ (no /Applications/)
+# - cmux y otras apps que corren todo el día NO van fijas: cuando corren ya
+#   aparecen en el Dock por sí solas, fijarlas causa duplicación visible.
 DOCK_APPS=(
-  "Raycast"
-  "Google Chrome"
-  "Warp"
-  "cmux"
-  "Cursor"
-  "Granola"
-  "Obsidian"
-  "Figma"
-  "Ajustes del Sistema"
+  "/Applications/Raycast.app"
+  "/Applications/Google Chrome.app"
+  "/Applications/Warp.app"
+  "/Applications/Cursor.app"
+  "/Applications/Obsidian.app"
+  "/Applications/Figma.app"
+  "/System/Applications/System Settings.app"
 )
 
 DOCK_PLIST="$HOME/Library/Preferences/com.apple.dock.plist"
@@ -48,14 +51,13 @@ fi
 defaults delete com.apple.dock persistent-apps 2>/dev/null || true
 
 # Agregar cada app si existe
-for app in "${DOCK_APPS[@]}"; do
-  app_path="/Applications/${app}.app"
+for app_path in "${DOCK_APPS[@]}"; do
   if [ -d "$app_path" ]; then
     defaults write com.apple.dock persistent-apps -array-add \
       "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>${app_path}/</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
-    log_info "Agregado: $app"
+    log_info "Agregado: $(basename "$app_path" .app)"
   else
-    log_skip "$app no instalado en /Applications/"
+    log_skip "$app_path no encontrado"
   fi
 done
 
