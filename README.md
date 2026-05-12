@@ -91,13 +91,20 @@ EXTRA_CASK_APPS="figma notion zoom"
 
 ```
 mac-setup/
-├── setup.sh              # Script principal
-├── macos-defaults.sh     # Configuraciones de macOS
-├── apps.txt              # Lista de apps Homebrew Cask
-├── extensions.txt        # Extensiones de VS Code
-├── Brewfile              # Para brew bundle
-├── .zshrc.custom         # Configuraciones custom de zsh
-└── README.md             # Este archivo
+├── setup.sh                          # Script principal
+├── macos-defaults.sh                 # Configuraciones de macOS
+├── apps.txt                          # Lista de apps Homebrew Cask
+├── extensions.txt                    # Extensiones de VS Code
+├── Brewfile                          # Para brew bundle
+├── scripts/
+│   ├── setup-dock.sh                 # Dock con 9 apps premium para dev
+│   ├── setup-desktop-dashboard.sh    # Symlinks Desktop → carpetas reales
+│   ├── setup-folder-structure.sh     # ~/projects, ~/brand-assets, ~/Documents/Fiscal
+│   ├── setup-shell.sh                # Oh My Zsh + Powerlevel10k
+│   ├── backup-old-mac.sh             # Backup pre-migración
+│   ├── restore-new-mac.sh            # Restore en máquina nueva
+│   └── ...                           # (decommission, backup-services, etc.)
+└── README.md                         # Este archivo
 ```
 
 ## 📝 Archivos de Configuración
@@ -159,6 +166,27 @@ Abre Docker Desktop y completa la configuración inicial.
 
 ### 6. Personaliza ~/.zshrc.custom
 Edita según tus preferencias para aliases y funciones adicionales.
+
+### 7. Scripts de workspace (post-setup)
+
+Después del setup principal, corre estos scripts para organizar tu workspace:
+
+```bash
+# Crea estructura de carpetas estándar (~/projects, ~/brand-assets, ~/Documents/Fiscal, etc.)
+./scripts/setup-folder-structure.sh
+
+# Convierte Desktop en dashboard (symlinks a Projects, Apps, Brand, Docs, Capturas, Downloads)
+./scripts/setup-desktop-dashboard.sh
+
+# Limpia Dock y deja solo 9 apps premium para dev
+./scripts/setup-dock.sh
+```
+
+**Reglas que aplican estos scripts:**
+- `~/projects/` SOLO para repos con `.git`/`package.json`/`Cargo.toml`. Nada de PDFs, logos, FIEL.
+- `~/brand-assets/` para logos y assets de marca por cliente/marca.
+- `~/Documents/Fiscal/` para FIEL del SAT, contratos, acuses (solo fiscal real).
+- Desktop NO queda vacío — symlinks a las carpetas reales lo convierten en dashboard.
 
 ## 🔐 Generación de SSH Key
 
