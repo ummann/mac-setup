@@ -43,6 +43,8 @@ mac-setup/
 ├── apps.txt                              # Lista legacy de casks (fallback)
 ├── extensions.txt                        # Extensiones VS Code/Cursor (fallback)
 ├── globals.md                            # Paquetes globales npm / pipx / bun / uv
+├── pip-libs.md                           # Python user libs (mlx, torch, whisper, etc.)
+├── extra-tools.md                        # Tools fuera de PM (opencode, maestro, ollama)
 ├── claude-config.md                      # Bootstrap de ~/.claude (Claude Code)
 ├── dotfiles.md                           # Bootstrap de ~/dotfiles
 ├── mcp-servers.md                        # MCP servers configurados + secrets
@@ -96,11 +98,16 @@ Repo: `git@github.com:ummann-technologies/ummann-claude-config.git`
 Servers actuales: github, stripe, sentry, postgres, playwright, gitnexus,
 prisma, railway, figma. Ver el archivo para autenticación y secrets.
 
-### `globals.md` — paquetes globales
+### `globals.md` / `pip-libs.md` / `extra-tools.md`
 
-Lista actual: pipx (black, flake8, mypy), npm globals (pnpm, yarn, claude-code,
-turbo, vercel, wrangler, firebase-tools, eas-cli, expo-cli, @angular/cli,
-@sentry/cli), bun globals (vacío), uv tools (vacío).
+- **`globals.md`**: pipx (black, flake8, mypy) y npm globals (corepack +
+  claude-code recomendado; resto vía npx).
+- **`pip-libs.md`**: ~50 paquetes Python user-level — ML stack (mlx, mlx-whisper,
+  torch, huggingface_hub, tiktoken), HTTP (httpx, requests), CLI UX (typer,
+  rich), docs (fpdf2, openpyxl, pillow), `higgsfield-client`.
+- **`extra-tools.md`**: opencode (AI coding CLI), maestro (mobile UI testing),
+  gitnexus tools (`~/tools/gitnexus-*`), Ollama models (llama3.1:8b,
+  nomic-embed-text), UMMANN LaunchAgents.
 
 ## Personalización antes de correr
 
