@@ -17,16 +17,23 @@ GIT_EMAIL="angel@ummann.com"
 
 # Activar/desactivar secciones
 INSTALL_HOMEBREW=true
-INSTALL_CLI_TOOLS=true
+USE_BREW_BUNDLE=true        # Si true, usa Brewfile (preferido). Si false, loops manuales.
+INSTALL_CLI_TOOLS=true      # Ignorado si USE_BREW_BUNDLE=true
 INSTALL_NODE=true
 INSTALL_PYTHON=true
 INSTALL_DOCKER=true
 INSTALL_XCODE=true
-INSTALL_CASK_APPS=true
+INSTALL_CASK_APPS=true      # Ignorado si USE_BREW_BUNDLE=true
 INSTALL_VSCODE_EXTENSIONS=true
 INSTALL_OHMYZSH=true
 CONFIGURE_GIT=true
 CONFIGURE_MACOS_DEFAULTS=true
+BOOTSTRAP_DOTFILES=true     # Clona ~/dotfiles desde GitHub y corre install.sh
+BOOTSTRAP_CLAUDE=true       # Clona ~/.claude (config Claude Code) desde GitHub
+
+# Repos privados (requieren acceso SSH)
+DOTFILES_REPO="git@github.com:ummann-technologies/dotfiles.git"
+CLAUDE_CONFIG_REPO="git@github.com:ummann-technologies/ummann-claude-config.git"
 
 # Apps adicionales (separadas por espacio)
 EXTRA_CASK_APPS=""
@@ -145,6 +152,27 @@ if [[ "$INSTALL_HOMEBREW" == true ]]; then
     if ! brew list mas &>/dev/null; then
         log_info "Instalando mas (Mac App Store CLI)..."
         brew install mas
+    fi
+fi
+
+# === BREW BUNDLE (modo preferido) ===
+if [[ "$USE_BREW_BUNDLE" == true ]]; then
+    log_section "📦 brew bundle install (Brewfile)"
+
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    BREWFILE="$SCRIPT_DIR/Brewfile"
+
+    if [[ -f "$BREWFILE" ]]; then
+        log_info "Instalando todo desde $BREWFILE (formulas + casks + mas + vscode)..."
+        # --no-lock evita generar Brewfile.lock.json en el repo
+        brew bundle install --file="$BREWFILE" --no-lock || log_warn "brew bundle terminó con errores (algunos paquetes pueden requerir login MAS)"
+        log_info "brew bundle completado"
+
+        # Skipping los pasos legacy de CLI_TOOLS y CASK_APPS porque ya están en Brewfile
+        INSTALL_CLI_TOOLS=false
+        INSTALL_CASK_APPS=false
+    else
+        log_warn "No se encontró Brewfile, se usarán loops manuales (legacy)"
     fi
 fi
 
@@ -682,6 +710,46 @@ if [[ "$CONFIGURE_MACOS_DEFAULTS" == true ]]; then
     log_info "Configuraciones de macOS aplicadas"
 fi
 
+# === BOOTSTRAP DOTFILES ===
+if [[ "$BOOTSTRAP_DOTFILES" == true ]]; then
+    log_section "🏠 Dotfiles (~/dotfiles)"
+
+    if [[ -d "$HOME/dotfiles/.git" ]]; then
+        log_info "~/dotfiles ya existe. Haciendo pull..."
+        (cd "$HOME/dotfiles" && git pull --ff-only 2>/dev/null) || log_warn "No se pudo hacer pull"
+    else
+        log_info "Clonando dotfiles desde $DOTFILES_REPO..."
+        if git clone "$DOTFILES_REPO" "$HOME/dotfiles" 2>/dev/null; then
+            log_info "Corriendo install.sh de dotfiles..."
+            [[ -x "$HOME/dotfiles/install.sh" ]] && "$HOME/dotfiles/install.sh" || log_warn "install.sh no encontrado o no ejecutable"
+        else
+            log_warn "No se pudo clonar dotfiles. Verifica acceso SSH a GitHub."
+        fi
+    fi
+fi
+
+# === BOOTSTRAP CLAUDE CODE CONFIG ===
+if [[ "$BOOTSTRAP_CLAUDE" == true ]]; then
+    log_section "🤖 Claude Code config (~/.claude)"
+
+    if [[ -d "$HOME/.claude/.git" ]]; then
+        log_info "~/.claude ya existe como repo git. Haciendo pull..."
+        (cd "$HOME/.claude" && git pull --ff-only 2>/dev/null) || log_warn "No se pudo hacer pull"
+    elif [[ -d "$HOME/.claude" ]]; then
+        log_warn "~/.claude existe pero NO es repo git. Haciendo backup antes de clonar..."
+        mv "$HOME/.claude" "$HOME/.claude.backup.$(date +%Y%m%d_%H%M%S)"
+        git clone "$CLAUDE_CONFIG_REPO" "$HOME/.claude" || log_warn "No se pudo clonar claude-config"
+    else
+        log_info "Clonando claude-config desde $CLAUDE_CONFIG_REPO..."
+        git clone "$CLAUDE_CONFIG_REPO" "$HOME/.claude" || log_warn "No se pudo clonar. Verifica acceso SSH."
+    fi
+
+    # Verificar que claude-code está instalado
+    if ! command_exists claude; then
+        log_warn "Claude Code CLI no está instalado. Corre: npm i -g @anthropic-ai/claude-code"
+    fi
+fi
+
 # === RESUMEN FINAL ===
 log_section "✅ Setup Completado"
 
@@ -690,9 +758,12 @@ echo ""
 echo -e "${YELLOW}Acciones recomendadas:${NC}"
 echo "  1. Reinicia la terminal para aplicar cambios de zsh"
 echo "  2. Configura Powerlevel10k ejecutando: p10k configure"
-echo "  3. Abre VS Code y configura 'Shell Command: Install code command in PATH'"
+echo "  3. Abre VS Code/Cursor y configura 'Shell Command: Install code command in PATH'"
 echo "  4. Inicia Docker Desktop y completa la configuración inicial"
 echo "  5. Revisa y personaliza ~/.zshrc.custom según tus preferencias"
+echo "  6. Autentica servicios: gh auth login, railway login, op signin"
+echo "  7. Configura MCP servers: ver mcp-servers.md"
+echo "  8. Importa cookies del browser si planeas usar Higgsfield (ver apps-extra.md)"
 echo ""
 echo -e "${BLUE}Versiones instaladas:${NC}"
 command_exists node && echo "  Node.js: $(node -v)"

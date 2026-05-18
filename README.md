@@ -1,226 +1,194 @@
-# 🖥️ Mac Setup Automatizado
+# Mac Setup — UMMANN
 
-Script de configuración automatizada para Mac Mini/MacBook nueva con todas las herramientas, aplicaciones y configuraciones necesarias para desarrollo.
+Setup automatizado completo para Mac Mini / MacBook nueva. Replica una máquina
+de desarrollo idéntica: brew packages, apps, extensions VS Code/Cursor, dotfiles,
+config de Claude Code (subagents, skills, rules, playbooks), MCP servers y
+herramientas globales (npm, pipx, bun, uv).
 
-## ✨ Características
-
-- ✅ **Idempotente**: Puede ejecutarse múltiples veces sin problemas
-- ✅ **Manejo de errores**: Continúa ejecutándose si algo falla
-- ✅ **Detección de arquitectura**: Compatible con Intel y Apple Silicon
-- ✅ **Modular**: Activa/desactiva secciones según necesites
-- ✅ **Backup automático**: Respalda archivos existentes antes de sobrescribir
-
-## 📦 ¿Qué instala?
-
-### Herramientas CLI
-- **Core:** git, gh, wget, curl, tree, jq, yq, htop, tldr
-- **Modern Utils:** ripgrep, fd, bat, eza, fzf, zoxide, procs, dust, duf
-- **Development:** tmux, httpie, shellcheck, direnv, lazygit, delta, gnupg
-- **Databases:** postgresql, redis
-- **Cloud:** awscli, kubectl, stripe, gcloud
-
-### Lenguajes y Runtimes
-- Node.js (última LTS via nvm)
-- npm, yarn, pnpm
-- Python 3 con pipx
-
-### CLIs Globales (npm)
-- eas-cli, expo-cli (React Native/Expo)
-- firebase-tools
-- vercel, netlify-cli
-- typescript, ts-node
-- @angular/cli
-
-### Aplicaciones
-- Navegadores: Chrome, Firefox
-- Editores: VS Code, Cursor
-- Terminal: iTerm2, Warp
-- Productividad: Rectangle, Raycast, Notion, Figma
-- Desarrollo: Docker, Postman, TablePlus, Android Studio
-- Cloud: Google Cloud SDK
-- Comunicación: Slack, Discord
-- Entretenimiento: Spotify
-
-### Extensiones VS Code
-- Prettier, ESLint, Tailwind CSS
-- GitLens, GitHub Copilot
-- Python, Docker
-- Y muchas más...
-
-### Configuraciones
-- Oh My Zsh con Powerlevel10k
-- Plugins: autosuggestions, syntax-highlighting
-- Aliases y funciones útiles
-- Configuraciones de macOS optimizadas
-
-## 🚀 Uso Rápido
+## TL;DR — Mac nueva en una sola corrida
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/UMMANNAI/mac-setup.git
-cd mac-setup
-
-# Dar permisos de ejecución
+git clone https://github.com/ummann/mac-setup.git ~/mac-setup
+cd ~/mac-setup
 chmod +x setup.sh macos-defaults.sh
-
-# Ejecutar
 ./setup.sh
 ```
 
-## ⚙️ Personalización
+El script es **idempotente** — si lo corres dos veces no rompe nada.
 
-Antes de ejecutar, edita las variables al inicio de `setup.sh`:
+## Qué hace `setup.sh`
 
-```bash
-# === PERSONALIZACIÓN ===
-GIT_NAME="UMMANN AI"
-GIT_EMAIL="angel@ummann.com"
+| Paso | Qué hace | Bandera |
+|---|---|---|
+| 1. Homebrew | Instala brew si no existe + taps adicionales | `INSTALL_HOMEBREW` |
+| 2. **brew bundle** | Instala TODO desde `Brewfile` (formulas + casks + MAS + vscode) | `USE_BREW_BUNDLE` |
+| 3. Xcode | Acepta licencia, instala via MAS si falta | `INSTALL_XCODE` |
+| 4. Node (fnm) | Instala fnm + Node LTS + globals (pnpm, yarn, claude-code, turbo, vercel, …) | `INSTALL_NODE` |
+| 5. Python | pipx + black, flake8, mypy | `INSTALL_PYTHON` |
+| 6. Docker | Verifica Docker Desktop / Colima | `INSTALL_DOCKER` |
+| 7. VS Code / Cursor | Instala `code` y `cursor` CLI + extensiones de `extensions.txt` | `INSTALL_VSCODE_EXTENSIONS` |
+| 8. Git | Aliases globales, user.name, user.email, default branch main | `CONFIGURE_GIT` |
+| 9. Oh My Zsh | Powerlevel10k, autosuggestions, syntax-highlighting, iterm2 themes | `INSTALL_OHMYZSH` |
+| 10. macOS defaults | Finder, Dock, teclado, trackpad, Screen Sharing | `CONFIGURE_MACOS_DEFAULTS` |
+| 11. **Dotfiles** | Clona `~/dotfiles` + corre `install.sh` (symlinks .zshrc, .p10k.zsh, dev-tools) | `BOOTSTRAP_DOTFILES` |
+| 12. **Claude config** | Clona `~/.claude` con agents, skills, rules, playbooks, prompts | `BOOTSTRAP_CLAUDE` |
 
-# Activar/desactivar secciones
-INSTALL_NODE=true
-INSTALL_PYTHON=true
-INSTALL_DOCKER=true
-INSTALL_OHMYZSH=true
-CONFIGURE_MACOS_DEFAULTS=true
+Para desactivar cualquier sección, editar las flags al inicio de `setup.sh`.
 
-# Apps adicionales
-EXTRA_CASK_APPS="figma notion zoom"
-```
-
-## 📁 Estructura de Archivos
+## Estructura del repo
 
 ```
 mac-setup/
-├── setup.sh                          # Script principal
-├── macos-defaults.sh                 # Configuraciones de macOS
-├── apps.txt                          # Lista de apps Homebrew Cask
-├── extensions.txt                    # Extensiones de VS Code
-├── Brewfile                          # Para brew bundle
+├── Brewfile                              # Fuente de verdad de TODO lo de Homebrew
+├── apps.txt                              # Lista legacy de casks (fallback)
+├── extensions.txt                        # Extensiones VS Code/Cursor (fallback)
+├── globals.md                            # Paquetes globales npm / pipx / bun / uv
+├── claude-config.md                      # Bootstrap de ~/.claude (Claude Code)
+├── dotfiles.md                           # Bootstrap de ~/dotfiles
+├── mcp-servers.md                        # MCP servers configurados + secrets
+├── apps-extra.md                         # Apps fuera de brew (cmux, Higgsfield, MAS)
+├── setup.sh                              # Script principal (idempotente)
+├── macos-defaults.sh                     # Defaults adicionales de macOS
+├── .zshrc.custom                         # Aliases y functions zsh
 ├── scripts/
-│   ├── setup-dock.sh                 # Dock con 9 apps premium para dev
-│   ├── setup-desktop-dashboard.sh    # Symlinks Desktop → carpetas reales
-│   ├── setup-folder-structure.sh     # ~/projects, ~/brand-assets, ~/Documents/Fiscal
-│   ├── setup-shell.sh                # Oh My Zsh + Powerlevel10k
-│   ├── backup-old-mac.sh             # Backup pre-migración
-│   ├── restore-new-mac.sh            # Restore en máquina nueva
-│   └── ...                           # (decommission, backup-services, etc.)
-└── README.md                         # Este archivo
+│   ├── setup-folder-structure.sh         # ~/projects, ~/brand-assets, ~/Documents/Fiscal
+│   ├── setup-desktop-dashboard.sh        # Symlinks Desktop → carpetas reales
+│   ├── setup-dock.sh                     # Dock con 9 apps premium para dev
+│   ├── setup-shell.sh                    # Oh My Zsh + Powerlevel10k
+│   ├── backup-old-mac.sh                 # Backup pre-migración
+│   ├── restore-new-mac.sh                # Restore en máquina nueva
+│   └── ...                               # (decommission, backup-services, etc.)
+└── README.md                             # Este archivo
 ```
 
-## 📝 Archivos de Configuración
+## Componentes principales
 
-### `apps.txt`
-Lista de aplicaciones para instalar via Homebrew Cask. Una app por línea, las líneas que comienzan con `#` son ignoradas.
+### `Brewfile` — fuente de verdad
 
-### `extensions.txt`
-Lista de extensiones de VS Code. Usa el ID de la extensión (ej: `esbenp.prettier-vscode`).
+Todo lo de Homebrew vive aquí: 60+ formulas, 30+ casks, 4 MAS apps, 53 extensiones
+VS Code/Cursor. Mantener al día con:
 
-### `Brewfile`
-Archivo para `brew bundle`. Alternativa a ejecutar el script, puedes usar:
 ```bash
-brew bundle install --file=Brewfile
+brew bundle dump --force --file=Brewfile      # exporta estado actual
+brew bundle install --file=Brewfile           # restaura desde el archivo
+brew bundle cleanup --file=Brewfile           # muestra qué eliminar
 ```
 
-### `.zshrc.custom`
-Aliases, funciones y configuraciones de zsh. Este archivo se copia a `~/.zshrc.custom` y se incluye en tu `.zshrc`.
+### `~/dotfiles` — shell + scripts personales
 
-### `macos-defaults.sh`
-Configuraciones de macOS usando `defaults write`. Incluye:
-- Finder: mostrar archivos ocultos, extensiones, barra de ruta
-- Dock: tamaño, auto-hide, sin apps recientes
-- Teclado: velocidad de repetición
-- Screenshots: ubicación y formato
-- Y más...
+Ver [`dotfiles.md`](./dotfiles.md). Incluye `.zshrc`, `.p10k.zsh`, `.hammerspoon/`,
+y todo el directorio `dev-tools/` con scripts: `assign-port`, `clone-all-repos`,
+`init-stack`, `start-day`, `op-cmux`, etc.
 
-## 🔧 Después de la Instalación
+Repo: `git@github.com:ummann-technologies/dotfiles.git`
 
-### 1. Reinicia la terminal
-Para aplicar los cambios de zsh y Oh My Zsh.
+### `~/.claude` — Claude Code config
 
-### 2. Configura los colores del terminal (Powerlevel10k)
-```bash
-p10k configure
-```
-Esto te guiará para elegir colores, iconos y estilo del prompt.
+Ver [`claude-config.md`](./claude-config.md). Incluye 24 subagents personalizados
+(alfredo-reviewer, prometheus, atlas, momus, design-critic, …), 60+ skills
+(uwl, deploy, design-component, codex, qa, …), reglas globales (alfredo-review,
+prisma, router, …) y playbooks.
 
-### 3. Activa los iconos en Cursor/VS Code
-1. Abre **Cursor** o **VS Code**
-2. Presiona `Cmd + Shift + P`
-3. Escribe: **"File Icon Theme"**
-4. Selecciona **"Material Icon Theme"**
+Repo: `git@github.com:ummann-technologies/ummann-claude-config.git`
 
-### 4. Configura colores de iTerm2 (opcional)
-Los temas de colores se descargan automáticamente en `~/.iterm2-colors/`. Para activarlos:
-1. Abre **iTerm2** → **Settings** (`Cmd + ,`)
-2. Ve a **Profiles** → **Colors** → **Color Presets** → **Import**
-3. Navega a `~/.iterm2-colors/` y selecciona un tema:
-   - `Dracula.itermcolors` (morado oscuro)
-   - `Nord.itermcolors` (azul frío)
-   - `Catppuccin-Mocha.itermcolors` (pastel cálido)
-   - `Tokyo-Night.itermcolors` (azul/morado)
-   - `One-Dark.itermcolors` (estilo Atom)
-4. Después de importar, selecciónalo del menú desplegable
+### `mcp-servers.md` — Model Context Protocol
 
-### 5. Inicia Docker Desktop
-Abre Docker Desktop y completa la configuración inicial.
+Servers actuales: github, stripe, sentry, postgres, playwright, gitnexus,
+prisma, railway, figma. Ver el archivo para autenticación y secrets.
 
-### 6. Personaliza ~/.zshrc.custom
-Edita según tus preferencias para aliases y funciones adicionales.
+### `globals.md` — paquetes globales
 
-### 7. Scripts de workspace (post-setup)
+Lista actual: pipx (black, flake8, mypy), npm globals (pnpm, yarn, claude-code,
+turbo, vercel, wrangler, firebase-tools, eas-cli, expo-cli, @angular/cli,
+@sentry/cli), bun globals (vacío), uv tools (vacío).
 
-Después del setup principal, corre estos scripts para organizar tu workspace:
+## Personalización antes de correr
+
+Edita las variables al inicio de `setup.sh`:
 
 ```bash
-# Crea estructura de carpetas estándar (~/projects, ~/brand-assets, ~/Documents/Fiscal, etc.)
-./scripts/setup-folder-structure.sh
+GIT_NAME="UMMANN AI"
+GIT_EMAIL="angel@ummann.com"
 
-# Convierte Desktop en dashboard (symlinks a Projects, Apps, Brand, Docs, Capturas, Downloads)
-./scripts/setup-desktop-dashboard.sh
-
-# Limpia Dock y deja solo 9 apps premium para dev
-./scripts/setup-dock.sh
+USE_BREW_BUNDLE=true      # recomendado
+BOOTSTRAP_DOTFILES=true   # requiere acceso SSH a github.com:ummann-technologies
+BOOTSTRAP_CLAUDE=true     # idem
 ```
 
-**Reglas que aplican estos scripts:**
-- `~/projects/` SOLO para repos con `.git`/`package.json`/`Cargo.toml`. Nada de PDFs, logos, FIEL.
-- `~/brand-assets/` para logos y assets de marca por cliente/marca.
-- `~/Documents/Fiscal/` para FIEL del SAT, contratos, acuses (solo fiscal real).
-- Desktop NO queda vacío — symlinks a las carpetas reales lo convierten en dashboard.
+## Después del setup
 
-## 🔐 Generación de SSH Key
+1. **Reiniciar terminal** para cargar nueva config zsh
+2. **`p10k configure`** para configurar Powerlevel10k
+3. **VS Code / Cursor**: `Cmd+Shift+P` → "Shell Command: Install …" si los symlinks fallan
+4. **Docker Desktop**: abrirlo y completar onboarding (o usar Colima)
+5. **Autenticación**:
+   ```bash
+   gh auth login
+   railway login
+   op signin                # 1Password CLI
+   ```
+6. **MCP servers**: ver `mcp-servers.md` para autenticar Stripe, Sentry, Figma
+7. **Scripts de workspace** (post-setup):
+   ```bash
+   ./scripts/setup-folder-structure.sh    # ~/projects, ~/brand-assets, ~/Documents/Fiscal
+   ./scripts/setup-desktop-dashboard.sh   # Desktop como dashboard (symlinks)
+   ./scripts/setup-dock.sh                # Dock con 9 apps premium para dev
+   ```
+   **Reglas que aplican estos scripts:**
+   - `~/projects/` SOLO para repos con `.git`/`package.json`/`Cargo.toml`. Nada de PDFs, logos, FIEL.
+   - `~/brand-assets/` para logos y assets por cliente/marca.
+   - `~/Documents/Fiscal/` para FIEL del SAT, contratos, acuses.
+   - Desktop NO queda vacío — symlinks a carpetas reales lo convierten en dashboard.
+8. **SSH key** (manual, ver abajo)
 
-El script no genera SSH keys por seguridad. Hazlo manualmente:
+## SSH key (manual por seguridad)
 
 ```bash
-# Generar nueva SSH key
 ssh-keygen -t ed25519 -C "angel@ummann.com"
-
-# Iniciar ssh-agent
 eval "$(ssh-agent -s)"
-
-# Agregar al agent
-ssh-add ~/.ssh/id_ed25519
-
-# Copiar clave pública
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 pbcopy < ~/.ssh/id_ed25519.pub
+# Pegar en https://github.com/settings/keys
 ```
 
-Luego agrégala a [GitHub](https://github.com/settings/keys).
+## Sincronizar cambios
 
-## 🛠️ Solución de Problemas
+Cuando agregues una app, extension o cambies dotfiles:
 
-### Xcode Command Line Tools no se descarga / sin progreso
+```bash
+# Brewfile
+brew bundle dump --force --file=~/mac-setup/Brewfile
+cd ~/mac-setup
+git diff Brewfile                # revisar
+git add Brewfile
+git commit -m "feat(brew): add <package>"
 
-Durante la instalación de Homebrew, el script descarga Xcode Command Line Tools. Si el terminal se queda en "Downloading Command Line Tools for Xcode" sin mostrar progreso:
+# Extensions
+code --list-extensions > ~/mac-setup/extensions.txt   # o curado a mano
 
-1. El comando `softwareupdate` de macOS **no muestra barra de progreso** en terminal - esto es normal
-2. La descarga está ocurriendo en segundo plano (~500MB-1GB, puede tomar 5-15 minutos)
-3. Para verificar el progreso, abre **System Settings → General → Software Update**
-4. Si ves "Command Line Tools for Xcode" bajo "Other Updates", haz clic en **"Update Now"** para iniciar/continuar la descarga
-5. Una vez completada la descarga, el script continuará automáticamente
+# Dotfiles
+cd ~/dotfiles
+git status
+git add <archivos-específicos>    # NUNCA git add -A
+git commit -m "feat(dev-tools): describe change"
+git push
 
-### Homebrew no encontrado después de instalación
+# Claude config
+cd ~/.claude
+git add agents/ skills/ rules/
+git commit -m "feat(claude): describe change"
+git push
+```
+
+## Troubleshooting
+
+### "Command Line Tools for Xcode" se queda colgado
+
+`softwareupdate` no muestra progreso. Verificar en
+**System Settings → General → Software Update**. Tarda 5–15 min.
+
+### Homebrew no en PATH después de instalar
+
 ```bash
 # Apple Silicon
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -229,23 +197,29 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(/usr/local/bin/brew shellenv)"
 ```
 
-### nvm no encontrado
+### `fnm` no en PATH
+
 ```bash
-source ~/.zshrc
-# o
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+echo 'eval "$(fnm env --use-on-cd)"' >> ~/.zshrc
+exec zsh
 ```
 
-### Permisos denegados
+### Brewfile install falla en MAS apps
+
+Login en App Store primero. Si falla un MAS app específico (no comprado o
+sin licencia), comenta esa línea en `Brewfile`.
+
+### Bootstrap de `~/.claude` o `~/dotfiles` falla
+
 ```bash
-sudo chown -R $(whoami) /usr/local/lib /usr/local/include
+# Verifica acceso SSH a GitHub
+ssh -T git@github.com
+
+# Si falla, configura SSH key (ver arriba) o usa HTTPS:
+git clone https://github.com/ummann-technologies/dotfiles.git ~/dotfiles
+git clone https://github.com/ummann-technologies/ummann-claude-config.git ~/.claude
 ```
 
-## 📄 Licencia
+## Licencia
 
-MIT - Usa y modifica libremente.
-
----
-
-¡Disfruta tu nueva Mac! 🎉
+MIT — uso interno UMMANN.
