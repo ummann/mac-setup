@@ -1,113 +1,203 @@
+# =============================================================================
+# Brewfile — Fuente de verdad de TODO lo instalado via Homebrew
+# =============================================================================
+# Generado con: brew bundle dump --force --file=Brewfile
+# Instalar con:  brew bundle install --file=Brewfile
+# Sincronizar:   brew bundle dump --force --file=Brewfile (sobreescribe)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Taps
+# -----------------------------------------------------------------------------
+tap "getsentry/tools"
 tap "minio/stable"
 tap "oven-sh/bun"
 tap "schpet/tap"
 tap "stripe/stripe-cli"
 tap "wix/brew"
-brew "awscli"
-brew "bat"
-brew "cloudflared"
-brew "cocoapods"
-brew "colima"
+
+# -----------------------------------------------------------------------------
+# CLI Tools — core utilities
+# -----------------------------------------------------------------------------
+brew "bat"               # cat mejorado
+brew "coreutils"
 brew "curl"
+brew "duf"               # df mejorado
+brew "dust"              # du mejorado
+brew "eza"               # ls mejorado
+brew "fd"                # find mejorado
+brew "fzf"               # fuzzy finder
+brew "htop"
+brew "jq"
+brew "neovim"
+brew "procs"             # ps mejorado
+brew "ripgrep"
+brew "tldr"
+brew "tmux"
+brew "tree"
+brew "watch"
+brew "wget"
+brew "yq"
+brew "zoxide"            # cd mejorado
+
+# -----------------------------------------------------------------------------
+# Dev — git, shell, testing
+# -----------------------------------------------------------------------------
 brew "direnv"
-brew "docker"
-brew "duf"
-brew "dust"
-brew "eza"
-brew "fd"
-brew "ffmpeg"
-brew "fzf"
 brew "gh"
 brew "git"
 brew "git-delta"
 brew "git-filter-repo"
 brew "gnupg"
-brew "go"
-brew "htop"
 brew "httpie"
-brew "imagemagick"
-brew "jq"
 brew "just"
 brew "k6"
-brew "kubernetes-cli"
 brew "lazygit"
-brew "libavif"
-brew "libpq"
-brew "libpst"
-brew "librsvg"
-brew "mas"
-brew "neovim"
+brew "shellcheck"
+brew "terminal-notifier"
+
+# -----------------------------------------------------------------------------
+# Lenguajes / runtimes
+# -----------------------------------------------------------------------------
+brew "fnm"               # Node version manager
 brew "node@20", link: true
 brew "node@22"
-brew "ollama", restart_service: :changed
-brew "pandoc"
-brew "pgvector"
+brew "go"
 brew "pipx"
-brew "pngquant"
-brew "podman"
-brew "poppler"
+brew "uv"                # Python package manager
+brew "oven-sh/bun/bun"
+
+# -----------------------------------------------------------------------------
+# Databases / queues
+# -----------------------------------------------------------------------------
+brew "libpq"
+brew "pgvector"
 brew "postgresql@16", restart_service: :changed
 brew "postgresql@17"
 brew "postgresql@18"
-brew "potrace"
-brew "procs"
-brew "qrencode"
-brew "railway"
 brew "redis", restart_service: :changed
-brew "ripgrep"
-brew "shellcheck"
-brew "tectonic"
-brew "terminal-notifier"
-brew "tldr"
-brew "tmux"
+
+# -----------------------------------------------------------------------------
+# Cloud / infra
+# -----------------------------------------------------------------------------
+brew "awscli"
+brew "azure-cli"
+brew "cloudflared"
+brew "colima"            # Docker desktop alternativo
+brew "docker"
+brew "kubernetes-cli"
+brew "ngrok"
+brew "podman"
+brew "railway"
 brew "tor", restart_service: :changed
-brew "tree"
-brew "typst"
-brew "uv"
-brew "watch"
-brew "wget"
-brew "whisper-cpp"
-brew "yq"
-brew "zoxide"
+brew "getsentry/tools/sentry-cli"
 brew "minio/stable/mc"
-brew "oven-sh/bun/bun"
-brew "schpet/tap/linear"
 brew "stripe/stripe-cli/stripe"
+
+# -----------------------------------------------------------------------------
+# Media / documentos
+# -----------------------------------------------------------------------------
+brew "ffmpeg"
+brew "imagemagick"
+brew "libavif"
+brew "libpst"
+brew "librsvg"
+brew "pandoc"
+brew "pngquant"
+brew "poppler"
+brew "potrace"
+brew "qrencode"
+brew "tectonic"          # LaTeX engine
+brew "typst"
+brew "whisper-cpp"
+
+# -----------------------------------------------------------------------------
+# AI / ML
+# -----------------------------------------------------------------------------
+brew "ollama", restart_service: :changed
+
+# -----------------------------------------------------------------------------
+# iOS / mobile
+# -----------------------------------------------------------------------------
+brew "cocoapods"
 brew "wix/brew/applesimutils"
-cask "android-studio"
-cask "appcleaner"
-cask "chatbox"
-cask "claude"
+
+# -----------------------------------------------------------------------------
+# Productividad CLI
+# -----------------------------------------------------------------------------
+brew "mas"               # Mac App Store CLI
+brew "schpet/tap/linear" # Linear CLI
+
+# =============================================================================
+# Casks — apps de escritorio
+# =============================================================================
+
+# Editores / terminal
 cask "cursor"
+cask "iterm2"
+cask "visual-studio-code"
+cask "warp"
+
+# AI / productividad
+cask "chatbox"
+cask "claude"            # Claude Desktop
+cask "hammerspoon"       # Automation
+cask "notion"
+cask "raycast"
+cask "rectangle"
+
+# Comunicación
 cask "discord"
-cask "figma"
+cask "slack"
+
+# Desarrollo
+cask "android-studio"
+cask "gcloud-cli"
+cask "podman-desktop"
+cask "postman"
+cask "tableplus"
+cask "zulu@17"           # JDK 17
+
+# Browsers
 cask "firefox"
+
+# Diseño
+cask "figma"
+cask "inkscape"
+
+# Networking / seguridad
+cask "ngrok"
+cask "tailscale-app"
+
+# Tex / docs
+cask "mactex-no-gui"
+
+# Utilidades
+cask "appcleaner"
+cask "the-unarchiver"
+
+# Entretenimiento
+cask "spotify"
+
+# Fuentes nerd font
 cask "font-fira-code-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-meslo-lg-nerd-font"
-cask "gcloud-cli"
-cask "hammerspoon"
-cask "inkscape"
-cask "iterm2"
-cask "mactex-no-gui"
-cask "ngrok"
-cask "notion"
-cask "podman-desktop"
-cask "postman"
-cask "raycast"
-cask "rectangle"
-cask "slack"
-cask "spotify"
-cask "tableplus"
-cask "tailscale-app"
-cask "the-unarchiver"
-cask "visual-studio-code"
-cask "warp"
-cask "zulu@17"
+
+# =============================================================================
+# Mac App Store
+# =============================================================================
 mas "Telegram", id: 747648890
 mas "WhatsApp", id: 310633997
 mas "Windows App", id: 1295203466
 mas "Xcode", id: 497799835
+
+# =============================================================================
+# VS Code / Cursor extensions
+# =============================================================================
+# NOTA: estas extensiones también se instalan en Cursor via setup.sh.
+# Fuente actualizada: extensions.txt (formato simple por línea).
+
 vscode "aaron-bond.better-comments"
 vscode "bierner.markdown-preview-github-styles"
 vscode "bradlc.vscode-tailwindcss"
